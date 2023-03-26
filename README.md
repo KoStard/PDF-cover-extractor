@@ -1,9 +1,34 @@
-# PDF cover extractor
-This is an easy and powerful tool for quick extraction of PDF cover photo + converting it into png
-You can use it in two ways... First of all put the PDF file with PDF_cover_extractor.py in one folder and open terminal in that folder
+# PDF Cover Extractor
 
-1 - You can just run it (`python3 PDF_cover_extractor.py`) and then when program asks, type the file name
+This Python script extracts the first page of one or more PDF files and saves it as a PNG image file with the same name as the input PDF file.
 
-2 - You can give argument (the file name) directly from the terminal -> `python3 PDF_cover_extractor.py sample.pdf`
+## Before you run the script
 
-### Here is a solution for converting PDF to PNG too
+- You need Python 3.x
+- `sudo apt-get install poppler-utils`
+- If you want to use a virtual environment (optional): `python3 -m venv venv` and `source venv/bin/activate`
+- `pip install -r requirements.txt`
+
+## Usage
+
+To extract the cover photo from a PDF file, run the script with the file name as an argument:
+
+```
+python PDF_cover_extractor.py input_file.pdf
+```
+
+To extract the cover photos from multiple PDF files, provide the file names as multiple arguments:
+
+```
+python PDF_cover_extractor.py input_file1.pdf input_file2.pdf input_file3.pdf
+```
+
+The script will extract the first page of each PDF file and save it as a PNG image file with the same name as the input PDF file, but with the `.png` file extension.
+
+## Acknowledgements
+
+This script uses the `pdf2image` package to convert PDF pages to images and the `PyPDF2` package to read input PDF files and write output PDF files. It also uses the `argparse` module to parse command-line arguments.
+
+## License
+
+This script is released under the [MIT License](LICENSE). Feel free to use, modify, and distribute it as needed.

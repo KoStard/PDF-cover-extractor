@@ -1,23 +1,40 @@
 from pdf2image import convert_from_bytes
-from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfWriter, PdfReader
 import io
-import sys
+import argparse
 
-if len(sys.argv)>1:
-    input_file = sys.argv[1]
-else:
-    input_file = input("\x1b[0;33mType the PDF file name to create cover photo:\x1b[0m ")
+# Set up command-line argument parser
+parser = argparse.ArgumentParser(
+    description='Extract cover photo from PDF file.')
+parser.add_argument('input_files',
+                    type=str,
+                    nargs='+',
+                    help='PDF file names to extract cover photos from')
+args = parser.parse_args()
 
-inp = PdfFileReader(input_file, "rb")
-page = inp.getPage(0)
+# Loop over input files
+for input_file in args.input_files:
+    print("Extracting cover photo from {}...".format(input_file))
 
-wrt = PdfFileWriter()
-wrt.addPage(page)
+    # Open input PDF file and extract first page
+    pdf_reader = PdfReader(input_file)
+    first_page = pdf_reader.pages[0]
 
-r = io.BytesIO()
-wrt.write(r)
+    # Create output PDF writer and add first page
+    pdf_writer = PdfWriter()
+    pdf_writer.add_page(first_page)
 
-images = convert_from_bytes(r.getvalue())
-images[0].save(input_file[:-4]+".png")
-print("\x1b[0;33mDone, your cover photo has been saved as {}.\x1b[0m".format(input_file[:-4]+".png"))
-r.close()
+    # Write output PDF data to memory buffer
+    buffer = io.BytesIO()
+    pdf_writer.write(buffer)
+
+    # Convert output PDF data to image and save as PNG file
+    images = convert_from_bytes(buffer.getvalue())
+    output_file = input_file[:-4] + ".png"
+    images[0].save(output_file)
+
+    # Print confirmation message
+    print("Done, your cover photo has been saved as {}".format(output_file))
+
+    # Close memory buffer
+    buffer.close()
